@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Stopwatch</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: grey;
+            color: beige;
+        }
+        p {
+            font-size: xxx-large;
+        }
+        button {
+            margin: 10px;
+            background-color: darkkhaki;
+            font-weight: bold;
+
+        }
+    </style>
+</head>
+<body>
+<h1>Simple Stopwatch</h1>
+<p id="timer">00:00:00</p>
+<button id="start" onclick="start()">Start</button>
+<button id="stop" onclick="stop()">Stop</button>
+<button id="reset" onclick="reset()">Reset</button>
+<button id="lap" onclick="lap()">Lap</button>
+<ul id="laps"></ul>
+<script>
+    let display = document.getElementById("timer");
+    let laps = document.getElementById("laps");
+    let timer = 0;
+    let startTime = 0;
+    let elapsedTime = 0;
+    let isRunning = false;
+
+    function start() {
+        if (!isRunning) {
+            startTime = Date.now() - elapsedTime;
+            timer = setInterval(update, 10);
+            isRunning = true;
+        }
+    }
+
+    function update() {
+        let currentTime = Date.now();
+        elapsedTime = currentTime - startTime;
+
+        let minutes = Math.floor(elapsedTime / (1000 * 60) % 60);
+        let seconds = Math.floor(elapsedTime / 1000 % 60);
+        let miliseconds = Math.floor(elapsedTime % 1000 / 10);
+
+        miliseconds = String(miliseconds).padStart(2, '0');
+        minutes = String(minutes).padStart(2, '0');
+        seconds = String(seconds).padStart(2, '0');
+
+        display.textContent = `${minutes}:${seconds}:${miliseconds}`;
+    }
+    function stop() {
+        clearInterval(timer);
+        if (isRunning) {
+            elapsedTime = Date.now() - startTime;
+            isRunning = false;
+        }
+    }
+    function reset() {
+        clearInterval(timer);
+        startTime = 0;
+        elapsedTime = 0;
+        display.innerHTML = "00:00:00";
+        laps.innerHTML = "";
+    }
+
+    function lap() {
+        let currentLapTime = display.innerHTML.toString();
+        let lapElement = document.createElement("li");
+        lapElement.textContent = currentLapTime;
+        laps.appendChild(lapElement);
+    }
+</script>
+<!--Stage 1: In this stage you'll work only on HTML content and CSS styles are applied on later stages-->
+
+</body>
+</html>
